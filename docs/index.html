@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Frame Extractor for Photogrammetry</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
@@ -12,76 +14,243 @@
             background-image: radial-gradient(circle at 2px 2px, #334155 1px, transparent 0);
             background-size: 24px 24px;
         }
+        /* Hide scrollbar for gallery */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
     <!-- Hero Section -->
     <header class="hero-pattern bg-slate-900 border-b border-slate-800">
-        <div class="container mx-auto px-6 py-20 text-center">
-            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-6">
+        <div class="container mx-auto px-6 py-12 text-center">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-4">
                 Video to Photogrammetry
             </h1>
-            <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-                A simple, privacy-focused tool to extract high-quality, sharp frames from video for 3D reconstruction. 
-                Runs 100% locally on your machine.
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-8">
+                Extract frames from video for 3D reconstruction. 
             </p>
             
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="https://github.com/willbearfruits/video-frame-extractor/archive/refs/heads/main.zip" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-transform transform hover:-translate-y-1">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Download Tool (Zip)
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#web-tool" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Use Web Version
                 </a>
-                <a href="https://github.com/willbearfruits/video-frame-extractor" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 px-8 rounded-lg border border-slate-700 flex items-center justify-center gap-2">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    View Source
+                <a href="https://github.com/willbearfruits/video-frame-extractor/releases" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg border border-slate-700 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download Exe (Best Quality)
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Instructions -->
-    <main class="container mx-auto px-6 py-16 flex-1">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold mb-8 text-white border-l-4 border-blue-500 pl-4">How to Use</h2>
+    <!-- Web Tool Section -->
+    <main id="web-tool" class="container mx-auto px-6 py-12 flex-1">
+        <div class="max-w-4xl mx-auto bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
             
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Step 1 -->
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                    <div class="w-10 h-10 bg-blue-900 text-blue-300 rounded-full flex items-center justify-center font-bold mb-4">1</div>
-                    <h3 class="text-lg font-semibold mb-2">Download & Extract</h3>
-                    <p class="text-slate-400 text-sm">Download the zip file. Right-click and select "Extract All" to unzip it on your computer.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                    <div class="w-10 h-10 bg-emerald-900 text-emerald-300 rounded-full flex items-center justify-center font-bold mb-4">2</div>
-                    <h3 class="text-lg font-semibold mb-2">Run the Installer</h3>
-                    <p class="text-slate-400 text-sm">Double-click <code class="bg-slate-900 px-1 rounded text-emerald-400">install_and_run.bat</code>. It will automatically set up Python and open the tool.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                    <div class="w-10 h-10 bg-purple-900 text-purple-300 rounded-full flex items-center justify-center font-bold mb-4">3</div>
-                    <h3 class="text-lg font-semibold mb-2">Drag & Extract</h3>
-                    <p class="text-slate-400 text-sm">Drag your video into the browser window. Choose your settings and click Start. Done!</p>
-                </div>
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    Web Extractor (Lite)
+                </h2>
+                <span class="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded">Runs in Browser</span>
             </div>
 
-            <div class="mt-16 bg-slate-800/50 p-6 rounded-xl border border-dashed border-slate-700 text-center">
-                <h3 class="text-lg font-semibold mb-2 text-slate-300">Why not a web app?</h3>
-                <p class="text-slate-500 text-sm max-w-lg mx-auto">
-                    Video processing for photogrammetry requires heavy computation (blur detection, high-res extraction). 
-                    Running this locally ensures it works fast, handles large files (4K/8K), and keeps your data private.
-                </p>
+            <div class="p-8">
+                <!-- Step 1: Upload -->
+                <div id="step-upload" class="mb-8">
+                    <label class="block text-sm font-medium text-slate-400 mb-2">1. Select Video</label>
+                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 rounded-xl h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 hover:border-blue-500 transition-colors">
+                        <svg class="w-8 h-8 text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <span class="text-sm text-slate-400">Click to select video</span>
+                        <input type="file" id="file-input" class="hidden" accept="video/*">
+                    </div>
+                </div>
+
+                <!-- Step 2: Controls (Hidden initially) -->
+                <div id="step-controls" class="hidden space-y-6">
+                    <div class="flex items-center gap-4 bg-slate-800 p-4 rounded-lg">
+                        <div class="flex-1">
+                            <h3 id="video-name" class="font-medium text-white truncate">video.mp4</h3>
+                            <p id="video-meta" class="text-xs text-slate-400">Loading...</p>
+                        </div>
+                        <button id="change-video-btn" class="text-xs text-red-400 hover:text-red-300">Change</button>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Extraction Rate</label>
+                        <div class="flex items-center gap-4">
+                            <input type="range" id="rate-slider" min="0.5" max="5" step="0.5" value="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <span id="rate-display" class="w-24 text-right font-mono text-blue-400">1.0 sec</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Lower = More images. Higher = Fewer images.</p>
+                    </div>
+
+                    <button id="start-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
+                        <span>Start Extraction</span>
+                    </button>
+                </div>
+
+                <!-- Step 3: Progress (Hidden initially) -->
+                <div id="step-progress" class="hidden text-center py-8">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="none" class="text-slate-800" />
+                            <circle id="progress-ring" cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="none" class="text-blue-500 transition-all duration-300" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+                        </svg>
+                        <span id="progress-text" class="absolute inset-0 flex items-center justify-center font-bold text-xl">0%</span>
+                    </div>
+                    <p class="text-slate-400 animate-pulse">Processing frames...</p>
+                    <p id="frame-counter" class="text-xs text-slate-500 mt-2">0 extracted</p>
+                    
+                    <!-- Preview Strip -->
+                    <div id="preview-strip" class="mt-6 flex gap-2 overflow-x-auto h-20 opacity-50"></div>
+                </div>
+
+                <!-- Step 4: Done -->
+                <div id="step-done" class="hidden text-center py-8">
+                    <div class="w-16 h-16 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Done!</h3>
+                    <p class="text-slate-400 mb-6">Your frames have been zipped.</p>
+                    <button onclick="location.reload()" class="text-sm text-slate-500 hover:text-white underline">Start Over</button>
+                </div>
+
             </div>
+        </div>
+
+        <div class="mt-12 text-center text-slate-500 text-sm max-w-2xl mx-auto">
+            <p class="mb-2"><strong>Note:</strong> The web version is limited by your browser's memory. For large videos (4K) or long clips, use the Downloadable Exe.</p>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-950 py-8 text-center text-slate-600 text-sm">
-        <p>Created with <span class="text-red-900">♥</span> for Students.</p>
-    </footer>
+    <script>
+        // DOM Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const stepUpload = document.getElementById('step-upload');
+        const stepControls = document.getElementById('step-controls');
+        const stepProgress = document.getElementById('step-progress');
+        const stepDone = document.getElementById('step-done');
+        const videoName = document.getElementById('video-name');
+        const videoMeta = document.getElementById('video-meta');
+        const startBtn = document.getElementById('start-btn');
+        const rateSlider = document.getElementById('rate-slider');
+        const rateDisplay = document.getElementById('rate-display');
+        const progressRing = document.getElementById('progress-ring');
+        const progressText = document.getElementById('progress-text');
+        const frameCounter = document.getElementById('frame-counter');
+        const previewStrip = document.getElementById('preview-strip');
 
+        let videoFile = null;
+        let videoEl = document.createElement('video');
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        // Drag & Drop
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-blue-500'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500');
+            if(e.dataTransfer.files.length) loadVideo(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if(e.target.files.length) loadVideo(e.target.files[0]);
+        });
+
+        // UI Logic
+        rateSlider.addEventListener('input', (e) => {
+            rateDisplay.textContent = e.target.value + " sec";
+        });
+
+        document.getElementById('change-video-btn').addEventListener('click', () => {
+            location.reload();
+        });
+
+        function loadVideo(file) {
+            videoFile = file;
+            const url = URL.createObjectURL(file);
+            videoEl.src = url;
+            videoEl.muted = true;
+            videoEl.preload = "auto";
+            
+            videoEl.onloadedmetadata = () => {
+                videoName.textContent = file.name;
+                videoMeta.textContent = `${Math.round(videoEl.duration)}s • ${videoEl.videoWidth}x${videoEl.videoHeight}`;
+                stepUpload.classList.add('hidden');
+                stepControls.classList.remove('hidden');
+                
+                canvas.width = videoEl.videoWidth;
+                canvas.height = videoEl.videoHeight;
+            };
+        }
+
+        startBtn.addEventListener('click', async () => {
+            stepControls.classList.add('hidden');
+            stepProgress.classList.remove('hidden');
+            
+            const zip = new JSZip();
+            const folder = zip.folder("frames");
+            const interval = parseFloat(rateSlider.value);
+            const duration = videoEl.duration;
+            let currentTime = 0;
+            let count = 0;
+            const totalEst = Math.floor(duration / interval);
+            
+            // Seeking function wrapped in promise
+            const seekTo = (time) => {
+                return new Promise(resolve => {
+                    const onSeek = () => {
+                        videoEl.removeEventListener('seeked', onSeek);
+                        resolve();
+                    };
+                    videoEl.addEventListener('seeked', onSeek);
+                    videoEl.currentTime = time;
+                });
+            };
+
+            while (currentTime < duration) {
+                await seekTo(currentTime);
+                
+                // Draw to canvas
+                ctx.drawImage(videoEl, 0, 0);
+                
+                // Save to zip (async blob)
+                const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.9));
+                const filename = `frame_${count.toString().padStart(4, '0')}.jpg`;
+                folder.file(filename, blob);
+
+                // Update UI
+                count++;
+                currentTime += interval;
+                
+                const percent = Math.min(100, Math.round((currentTime / duration) * 100));
+                const offset = 251.2 - (251.2 * percent / 100);
+                progressRing.style.strokeDashoffset = offset;
+                progressText.textContent = percent + "%";
+                frameCounter.textContent = `${count} extracted`;
+
+                // Add Preview (every 5th frame to save DOM load)
+                if(count % 5 === 0) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(blob);
+                    img.className = "h-full rounded border border-slate-600";
+                    previewStrip.appendChild(img);
+                    previewStrip.scrollLeft = previewStrip.scrollWidth;
+                }
+            }
+
+            // Generate Zip
+            progressText.textContent = "Zipping...";
+            const content = await zip.generateAsync({type:"blob"});
+            saveAs(content, "frames.zip");
+            
+            stepProgress.classList.add('hidden');
+            stepDone.classList.remove('hidden');
+        });
+
+    </script>
 </body>
 </html>
