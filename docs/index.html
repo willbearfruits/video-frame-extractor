@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Frame Extractor for Photogrammetry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 2px 2px, #334155 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Hero Section -->
+    <header class="hero-pattern bg-slate-900 border-b border-slate-800">
+        <div class="container mx-auto px-6 py-20 text-center">
+            <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-6">
+                Video to Photogrammetry
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
+                A simple, privacy-focused tool to extract high-quality, sharp frames from video for 3D reconstruction. 
+                Runs 100% locally on your machine.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="https://github.com/willbearfruits/video-frame-extractor/archive/refs/heads/main.zip" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-transform transform hover:-translate-y-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download Tool (Zip)
+                </a>
+                <a href="https://github.com/willbearfruits/video-frame-extractor" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 px-8 rounded-lg border border-slate-700 flex items-center justify-center gap-2">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View Source
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Instructions -->
+    <main class="container mx-auto px-6 py-16 flex-1">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-8 text-white border-l-4 border-blue-500 pl-4">How to Use</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div class="w-10 h-10 bg-blue-900 text-blue-300 rounded-full flex items-center justify-center font-bold mb-4">1</div>
+                    <h3 class="text-lg font-semibold mb-2">Download & Extract</h3>
+                    <p class="text-slate-400 text-sm">Download the zip file. Right-click and select "Extract All" to unzip it on your computer.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div class="w-10 h-10 bg-emerald-900 text-emerald-300 rounded-full flex items-center justify-center font-bold mb-4">2</div>
+                    <h3 class="text-lg font-semibold mb-2">Run the Installer</h3>
+                    <p class="text-slate-400 text-sm">Double-click <code class="bg-slate-900 px-1 rounded text-emerald-400">install_and_run.bat</code>. It will automatically set up Python and open the tool.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                    <div class="w-10 h-10 bg-purple-900 text-purple-300 rounded-full flex items-center justify-center font-bold mb-4">3</div>
+                    <h3 class="text-lg font-semibold mb-2">Drag & Extract</h3>
+                    <p class="text-slate-400 text-sm">Drag your video into the browser window. Choose your settings and click Start. Done!</p>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-slate-800/50 p-6 rounded-xl border border-dashed border-slate-700 text-center">
+                <h3 class="text-lg font-semibold mb-2 text-slate-300">Why not a web app?</h3>
+                <p class="text-slate-500 text-sm max-w-lg mx-auto">
+                    Video processing for photogrammetry requires heavy computation (blur detection, high-res extraction). 
+                    Running this locally ensures it works fast, handles large files (4K/8K), and keeps your data private.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-8 text-center text-slate-600 text-sm">
+        <p>Created with <span class="text-red-900">♥</span> for Students.</p>
+    </footer>
+
+</body>
+</html>
