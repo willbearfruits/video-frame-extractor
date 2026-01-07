@@ -79,10 +79,10 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-400 mb-2">Extraction Rate</label>
                         <div class="flex items-center gap-4">
-                            <input type="range" id="rate-slider" min="0.5" max="5" step="0.5" value="1" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
-                            <span id="rate-display" class="w-24 text-right font-mono text-blue-400">1.0 sec</span>
+                            <input type="range" id="rate-slider" min="0" max="1" step="0.1" value="0.5" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <span id="rate-display" class="w-40 text-right font-mono text-blue-400">Every 0.5s</span>
                         </div>
-                        <p class="text-xs text-slate-500 mt-1">Lower = More images. Higher = Fewer images.</p>
+                        <p class="text-xs text-slate-500 mt-1">"All Frames" extracts at approx 30fps.</p>
                     </div>
 
                     <button id="start-btn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
@@ -162,7 +162,12 @@
 
         // UI Logic
         rateSlider.addEventListener('input', (e) => {
-            rateDisplay.textContent = e.target.value + " sec";
+            const val = parseFloat(e.target.value);
+            if (val === 0) {
+                rateDisplay.textContent = "All Frames (~30fps)";
+            } else {
+                rateDisplay.textContent = "Every " + val + " sec";
+            }
         });
 
         document.getElementById('change-video-btn').addEventListener('click', () => {
@@ -193,7 +198,11 @@
             
             const zip = new JSZip();
             const folder = zip.folder("frames");
-            const interval = parseFloat(rateSlider.value);
+            
+            let rawInterval = parseFloat(rateSlider.value);
+            // If slider is 0, default to ~30fps (0.033s)
+            const interval = (rawInterval === 0) ? (1/30) : rawInterval;
+            
             const duration = videoEl.duration;
             let currentTime = 0;
             let count = 0;
